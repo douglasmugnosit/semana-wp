@@ -1,0 +1,46 @@
+sudo apt install apache2
+sudo apt install mysql-server mysql-client
+mysql_secure_installation
+mysql -u root -p
+apt install php libapache2-mod-php php-mysql
+echo "<?php phpinfo(); ?>" > /var/www/html/info.php
+
+wget -c http://wordpress.org/latest.tar.gz
+tar -xzvf latest.tar.gz
+ls -l 
+sudo cp -R wordpress /var/www/html/meusite.com
+ls -l /var/www/html/
+chown -R www-data:www-data /var/www/html/meusite.com
+chmod -R 775 /var/www/html/meusite.com
+
+sudo mysql -u root -p
+CREATE DATABASE meusite;
+CREATE USER 'meusiteadmin' IDENTIFIED BY 'CDE34rfv!';
+GRANT ALL PRIVILEGES ON meusite.* TO 'meusiteadmin'@'%' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+SELECT user, host FROM mysql.user;
+EXIT
+
+cd /var/www/html/meusite.com
+mv wp-config-sample.php wp-config.php
+
+vim wp-config.php
+- change ip, hostname, db , table...
+
+ sudo vim /etc/apache2/sites-available/meusite.com.conf
+ <VirtualHost *:80>
+        ServerName meusite.com
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/html/meusite.com
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+#enable new site
+apache2ctl -t
+sudo a2ensite meusite.com.conf
+sudo systemctl reload apache2
+
+#disable default site
+sudo a2dissite 000-default.conf
+sudo systemctl reload apache2
