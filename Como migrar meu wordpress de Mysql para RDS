@@ -1,0 +1,6 @@
+Comandos:
+#Backup
+ mysqldump -u root -p mysite > mysite_db_backup.sql
+
+#Restore
+ mysql -u admin -h wp-admin.c0olaaaplh2v.us-east-1.rds.amazonaws.com -p mysite < mysite_db_backup.sql
